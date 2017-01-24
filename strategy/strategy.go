@@ -1,60 +1,81 @@
+/*
+
+ */
 package main
 
 import "fmt"
 
-type SoundInterface interface {
+type Sound interface {
 	Execute()
 }
 
 type SoundMP3 struct{}
 
-func (this *SoundMP3) Execute() {
+func (this SoundMP3) Execute() {
 	fmt.Println("Executando MP3")
 }
 
 type SoundWAV struct{}
 
-func (this *SoundWAV) Execute() {
+func (this SoundWAV) Execute() {
 	fmt.Println("Executando WAV")
 }
 
 type buttonAbstract struct {
 	Text  string
-	Sound SoundInterface
+	Sound Sound
 }
 
-func (this *buttonAbstract) GetText() string {
+func (this buttonAbstract) GetText() string {
 	return this.Text
 }
 
-func (this *buttonAbstract) SoundClick() {
+func (this buttonAbstract) SoundClick() {
 	this.Sound.Execute()
 }
 
-func (this *buttonAbstract) ChangeSoundType(sound SoundInterface) {
+func (this *buttonAbstract) ChangeSoundType(sound Sound) {
 	this.Sound = sound
 }
 
-type buttonCommon struct {
+type button struct {
 	buttonAbstract
+	Icon string
 }
 
-func NewButtonCommon(text string, sound SoundInterface) *buttonCommon {
-	return &buttonCommon{buttonAbstract{text, sound}}
+func (this button) GetIcon() string {
+	return this.Icon
+}
+
+func NewButton(text string, sound Sound, icon string) button {
+	return button{buttonAbstract{text, sound}, icon}
+}
+
+type menuItem struct {
+	buttonAbstract
+	Parent string
+}
+
+func (this menuItem) GetParent() string {
+	return this.Parent
+}
+
+func NewMenuItem(text string, sound Sound, parent string) menuItem {
+	return menuItem{buttonAbstract{text, sound}, parent}
 }
 
 func main() {
-	buttonMP3 := NewButtonCommon("* Botão Comum MP3", &SoundMP3{})
-	fmt.Println(buttonMP3.GetText())
-	buttonMP3.SoundClick()
+	button := NewButton("Cancelar", &SoundMP3{}, "X")
+	fmt.Printf("Botão: %s | Icone: %s \n", button.GetText(), button.GetIcon())
+	button.SoundClick()
+	button.ChangeSoundType(&SoundWAV{})
+	button.SoundClick()
 
-	buttonWAV := NewButtonCommon("* Botão Comum WAV", &SoundWAV{})
-	fmt.Println(buttonWAV.GetText())
-	buttonWAV.SoundClick()
+	fmt.Println()
 
-	buttonChanged := NewButtonCommon("* Botão Misto", &SoundMP3{})
-	fmt.Println(buttonChanged.GetText())
-	buttonChanged.SoundClick()
-	buttonChanged.ChangeSoundType(&SoundWAV{})
-	buttonChanged.SoundClick()
+	menuItem := NewMenuItem("Pessoas", &SoundMP3{}, "Cadastro")
+	fmt.Printf("Menu Item: %s | Menu: %s \n", menuItem.GetText(), menuItem.GetParent())
+	menuItem.SoundClick()
+	menuItem.ChangeSoundType(&SoundWAV{})
+	menuItem.SoundClick()
 }
