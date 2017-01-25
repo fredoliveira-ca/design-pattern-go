@@ -1,3 +1,15 @@
+/*
+	Pattern Observer:
+		O padrão Observer funciona como um canal no YouTube, onde sempre que o canal publica um novo vídeo,
+		as pessoas inscritas recebem uma notificação dessa mudança. Assim como na vida real,
+		uma pessoa pode se inscrever no canal para ficar por dentro de todas atualizações ou 
+		se desinscrever para não receber notificações.
+		Seguindo esse exemplo, temos o YouTube sendo o (Observable) e as pessoas sendo o (Observer)
+	Exemplos: 
+		Tenho um serviço que verifica novos arquivos em uma pasta e notifica o sistema que é preciso
+		processar, mover arquivo e notificar o usuário na tela sem a necessidade de uma consulta.
+		Todas essas classes iram assina o verificador para receberem atualizações de mudanças.
+ */
 package main
 
 import(
